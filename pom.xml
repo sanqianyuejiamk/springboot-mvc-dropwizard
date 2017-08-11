@@ -15,7 +15,7 @@
         <kafkaclient.version>0.10.0.0</kafkaclient.version>
         <lombok.version>1.16.4</lombok.version>
         <joda-time.version>2.3</joda-time.version>
-        <guava.version>15.0</guava.version>
+        <guava.version>18.0</guava.version>
         <slf4j.version>1.7.5</slf4j.version>
         <logback.version>1.0.13</logback.version>
         <org.springframework.version>4.2.3.RELEASE</org.springframework.version>
@@ -163,6 +163,12 @@
             <artifactId>mybatis-generator-core</artifactId>
             <version>${mybatis-generator-core.version}</version>
         </dependency>
+        <!-- dropwizard -->
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+            <version>0.9.0</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -189,7 +195,7 @@
                 <version>1.4.0.RELEASE</version>
                 <configuration>
                     <!--因为项目中含有多个@SpringBootApplication,所以需要指定下打包生成的应用入口,一般不应该在项目中存在多个@SpringBootApplication&ndash;&gt;-->
-                    <mainClass>com.mengka.springboot.SpringBootMonitorStart</mainClass>
+                    <mainClass>com.mengka.springboot.dropwizard.HelloWorldApplication</mainClass>
                     <executable>false</executable>
                     <excludeDevtools>true</excludeDevtools>
                 </configuration>
