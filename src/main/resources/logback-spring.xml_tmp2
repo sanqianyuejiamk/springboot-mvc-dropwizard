@@ -1,0 +1,82 @@
+<configuration>
+    <contextName>myAppName</contextName>
+
+    <property name="LOG_PATH" value="D:/logs/spring-boot"/>
+    <property name="LOG_NAME" value="spring-boot"/>
+    <property name="LOG_LEVEL" value="INFO"/>
+    <conversionRule conversionWord="traceLogId"
+                    converterClass="com.mengka.springboot.tracelog.TraceLogIdConverter"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <!--  控制台输出  -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--  日志输出编码  -->
+        <Encoding>UTF-8</Encoding>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceLogId}] %logger{15} %line - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+    <!--  按照每天生成日志文件  -->
+    <appender name="normalFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Encoding>UTF-8</Encoding>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件输出的文件名 -->
+            <FileNamePattern>${LOG_PATH}/${LOG_NAME}_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--  <MaxHistory>30</MaxHistory>  -->
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceLogId}] %logger{15} %line - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+    <appender name="errorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Encoding>UTF-8</Encoding>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件输出的文件名 -->
+            <FileNamePattern>${LOG_PATH}/${LOG_NAME}_%d{yyyy-MM-dd}_error.log</FileNamePattern>
+            <!--  <MaxHistory>30</MaxHistory>  -->
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceLogId}] %logger{15} %line - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+    <!--<appender name="KafkaMonitor"-->
+              <!--class="com.mengka.logmonitor.appender.MengkaAppender">-->
+        <!--<filter class="com.mengka.logmonitor.filter.LogMonitorFilter"/>-->
+        <!--<sendkfaka>true</sendkfaka>-->
+        <!--<topic>kafkamonitor-t1</topic>-->
+        <!--<queueSize>1024</queueSize>-->
+        <!--<zookeeperHost>192.168.1.63:2181</zookeeperHost>-->
+        <!--<brokerList>192.168.1.63:9092</brokerList>-->
+    <!--</appender>-->
+
+
+    <logger name="com.mengka">
+        <level value="${LOG_LEVEL}"/>
+        <appender-ref ref="normalFile"/>
+        <appender-ref ref="errorFile"/>
+    </logger>
+    <!--  日志输出级别  -->
+    <root level="${LOG_LEVEL}">
+        <!--<appender-ref ref="KafkaMonitor"/>-->
+        <appender-ref ref="console"/>
+    </root>
+</configuration>

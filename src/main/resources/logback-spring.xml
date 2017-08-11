@@ -1,0 +1,58 @@
+<configuration>
+    <contextName>myAppName</contextName>
+
+    <property resource="application.properties" />
+    <property name="LOG_PATH" value="${logging.path}"/>
+    <property name="LOG_NAME" value="${logging.file}"/>
+    <property name="LOG_LEVEL" value="INFO"/>
+    <conversionRule conversionWord="traceLogId"
+                    converterClass="com.mengka.springboot.tracelog.TraceLogIdConverter"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <appender name="normalFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <!--<FileNamePattern>${LOG_FILE}_%d{yyyy-MM-dd}.log</FileNamePattern>-->
+            <FileNamePattern>${LOG_PATH}/${LOG_NAME}_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>120</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceLogId}] %logger{15} %line - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+    <logger name="org.springframework" level="WARN"/>
+
+    <springProfile name="DEV">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+        <logger name="com.mengka" level="INFO"/>
+    </springProfile>
+
+    <springProfile name="DEBUG">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="normalFile"/>
+        </root>
+        <logger name="com.mengka" level="DEBUG"/>
+    </springProfile>
+
+    <springProfile name="PREPRODUCT">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="normalFile"/>
+        </root>
+        <logger name="com.mengka" level="INFO"/>
+    </springProfile>
+
+    <springProfile name="PRODUCT">
+        <root level="WARN">
+            <appender-ref ref="normalFile"/>
+        </root>
+        <logger name="com.mengka" level="WARN"/>
+    </springProfile>
+</configuration>
