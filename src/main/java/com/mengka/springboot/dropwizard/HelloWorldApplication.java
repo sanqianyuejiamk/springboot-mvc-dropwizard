@@ -34,6 +34,7 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
          * 从helloWorldConfiguration实例读取模板和默认名字，创建资源实例；
          */
         final HelloWorldResource resource = new HelloWorldResource(helloWorldConfiguration.getTemplate(), helloWorldConfiguration.getDefaultName());
+
         /**
          * 添加healthCheck
          */
